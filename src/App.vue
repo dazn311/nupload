@@ -1,28 +1,45 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app>
+    <v-main>
+      <HomeView/>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld';
+import HomeView from './layouts/home'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
-}
-</script>
+    HomeView,
+     
+  },
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  data: () => ({
+    //
+  }),
+  methods: {
+      closeError() {
+        this.$store.dispatch('clearError')
+      } 
+    },
+    computed: {
+      error () {
+        return this.$store.getters.error
+      },
+      isUserLogIn () {
+        return this.$store.getters.isUserLoggedIn
+      }
+    },
+  created () {
+      this.$vuetify.lang.current = 'ru'
+      
+      this.$vuetify.theme.dark = true
+       if(!this.$store.getters.isUserLoggedIn) {
+            this.$store.dispatch('setLoginFromLocalStorage')
+          }
+    },
+};
+</script>
