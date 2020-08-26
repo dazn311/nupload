@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-layout row v-if="!loading && products.length !== 0">
+        <v-layout row v-if="this.$store.getters.getRouting == 'listFiles'">
             <v-flex offset-sm3 sm6 xs12>
                 <h2 class="text--secondary mb-3">Мои Файлы</h2>
                 <v-card
@@ -37,7 +37,12 @@
         </v-layout>
         <v-layout v-else-if="!loading && products">
             <v-flex class="text-xs-center" xs12>
-                <h1 class="text--primary">Вы еще не добавили ни одного товара</h1>
+                <h1 class="text--primary">У вас пока нет списков товара</h1>
+                <v-spacer></v-spacer>
+                <v-btn
+                        class="info"
+
+                >+Добавать</v-btn>
             </v-flex>
         </v-layout>
         <v-layout v-else>

@@ -72,11 +72,12 @@
                         const user = {
                             email: this.email,
                             password: this.password
-                        }
+                        };
                         this.$store.dispatch('loginUser', user)
                         .then(() => {
                             // console.log('ok login', this.$store.getters.isUserLoggedIn == true)
                           // this.$router.push({ path: '/list' })
+                            this.$store.dispatch('setRouting', 'listFiles')
                         })
                     
                     }
