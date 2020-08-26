@@ -17,8 +17,8 @@
               </v-toolbar>
               <v-card-text>
                 <v-form ref="form" color="indigo" v-model="valid" lazy-validation>
-                  <v-text-field v-model="email" prepend-icon="email" name="email" label="E-mail" type="email"
-                  :rules="emailRules" required 
+                  <v-text-field :rules="loginRules" label="Логин" name="email" prepend-icon="mdi-account" required
+                  type="text" v-model="email"
                   ></v-text-field>
                   <v-text-field v-model="password" :counter="3" prepend-icon="lock" name="password" label="Password" type="password"
                   :rules="passwordRules"
@@ -45,13 +45,17 @@
                 email: '',
                 password: '',
                 valid: false,
+                loginRules: [
+                    value => !!value || 'Введите логин.',
+                    value => (value && value.length >= 3) || 'Минимальное 3 символа',
+                ],
                 emailRules: [
                     v => !!v || 'E-mail is required',
                     v => /.+@.+/.test(v) || 'E-mail must be valid'
                 ],
                 passwordRules:[
                     v => !!v || 'Требуется пароль',
-                    v => (v && v.length >= 6) || 'Пароль желательно более 6 символов'
+                    v => (v && v.length >= 3) || 'Пароль желательно более 3 символов'
                 ],
 
             }
@@ -69,9 +73,9 @@
                             email: this.email,
                             password: this.password
                         }
-                        this.$store.dispatch('loginUserTmp', user)
+                        this.$store.dispatch('loginUser', user)
                         .then(() => {
-                            console.log('ok login', this.$store.getters.isUserLoggedIn == true)
+                            // console.log('ok login', this.$store.getters.isUserLoggedIn == true)
                           // this.$router.push({ path: '/list' })
                         })
                     

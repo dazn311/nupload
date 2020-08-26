@@ -14,6 +14,7 @@
             <v-list-item-title>Dashboard</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
         <v-list-item link>
           <v-list-item-action>
             <v-icon>mdi-cog</v-icon>
@@ -22,6 +23,16 @@
             <v-list-item-title>Settings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item @click="exitAccount()" link>
+          <v-list-item-action>
+            <v-icon>mdi-account-switch</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title>Выйти</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
       </v-list>
     </v-navigation-drawer>
 
@@ -30,7 +41,7 @@
       clipped-left
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>Файловый сервер</v-toolbar-title>
+      <v-toolbar-title>Ф-сервер</v-toolbar-title>
     </v-app-bar>
 
 
@@ -48,7 +59,7 @@
             <Auth></Auth>
           </template>
           <template v-if="this.$store.getters.isUserLoggedIn">
-            <Auth></Auth>
+            <ProdList></ProdList>
           </template>
 
           
@@ -83,9 +94,9 @@
 </template>
 
 <script>
-import Auth from '../components/Auth/Login';
-import Auth from '../components/Auth/Login';
-// import en from '../i18n/locales/en'
+  import Auth from '../components/Auth/Login';
+  import ProdList from '../components/listFiles/ListPhotos';
+  // import en from '../i18n/locales/en'
 // import fr from '../i18n/locales/fr'
 // import ru from '../i18n/locales/ru'
   export default {
@@ -98,7 +109,8 @@ import Auth from '../components/Auth/Login';
       showNav: true,
     }),
     components: {
-      Auth 
+      Auth,
+      ProdList
     },
     methods: {
       switchLang () {
@@ -106,6 +118,10 @@ import Auth from '../components/Auth/Login';
         //$vuetify.lang.t('$vuetify.LoginView') }}
         this.$vuetify.lang.current = 'ru'
         this.$vuetify.locale = 'ru'
+      },
+      exitAccount () {
+         this.$store.dispatch('logOutUser').then(this.drawer = !this.drawer)
+
       }
     }
 

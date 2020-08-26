@@ -1,7 +1,9 @@
+import axios from 'axios';
+
 class User {
     constructor (id, userName, password) {
-      this.id = id
-      this.userName = userName
+      this.id = id;
+      this.userName = userName;
       this.password = password
     }
   }
@@ -14,6 +16,9 @@ export default {
         setUser (state, payload) {
             state.user = payload
             
+        },
+        logOutUser (state) {
+            state.user = null
         }
     },
     getters: {
@@ -27,11 +32,34 @@ export default {
         }
     },
     actions: {
+        logOutUser ({ commit}) {
+            commit('logOutUser')
+
+        },
+        async loginUser ({commit}, {email, password}) {
+            commit('clearError');
+            commit('setLoading', true);
+            try {
+                const response = await axios
+                    .get(`http://zagotorvki.phpvueuploadfile/ajax/authf.php?u=${email}&p=${password}`);
+                commit('setUser', new User( response.data[0].id, response.data[0].userName, response.data[0].password) );
+                localStorage.setItem('owner', response.data[0].id);
+                commit('setLoading', false);
+                // console.log('response.data[0].userName :' , response.data[0].userName)
+
+            } catch (error) {
+                commit('setLoading', false);
+                commit('setError', error.message);
+                throw error
+            }
+        },
         setLoginFromLocalStorage ({ commit }) {
           commit('setUser', parseInt(localStorage.getItem('owner') ))
         },
         loginUserTmp ({commit}, {email, password} ) {
           console.log(email);
+            //     commit('clearError')
+            //     commit('setLoading', true)
           if ((email === 'alex2505@bk.ru') && (password === '123456')){
               const newUser = {id: 5, login: email, password}
               localStorage.setItem('owner', '5')
@@ -52,33 +80,8 @@ export default {
             }
             
         },
-        // async registerUser ({commit}, {email, password}) {
-        //     commit('clearError')
-        //     commit('setLoading', true)
-        //     try {
-        //       const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-        //       commit('setUser', new User(user.uid))
-        //       commit('setLoading', false)
-        //     } catch (error) {
-        //       commit('setLoading', false)
-        //       commit('setError', error.message)
-        //       throw error
-        //     }
-        //   },
-          async loginUser ({commit}, {email, password}) {
-            commit('clearError')
-            commit('setLoading', true)
-            console.log(email + password)
-            // try {
-            //   const user = await fb.auth().signInWithEmailAndPassword(email, password)
-            //   commit('setUser', new User(user.uid))
-            //   commit('setLoading', false)
-            // } catch (error) {
-            //   commit('setLoading', false)
-            //   commit('setError', error.message)
-            //   throw error
-            // }
-          },
+
+
           autoLoginUser ({commit}, payload) {
             commit('setUser', new User(payload.uid))
           },
@@ -90,7 +93,7 @@ export default {
             //     commit('setError', error.message)
             //     throw error
             // }
-            commit('Вы вышли')
+
             commit('setUser', null)
           }
     },
